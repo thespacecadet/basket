@@ -20,13 +20,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::group(['prefix' => '/baskets','middleware' => ['json.response']], function () {
 
-    //crud for the shopping basket itself
     Route::resource('/',BasketController::class, ['only' => ['index','store']]);
-//    Route::get('/', [BasketController::class, 'index']);
-//    Route::post('/', [BasketController::class, 'store']);
     Route::get('/{basket_id}', [BasketController::class, 'show']);
     Route::delete('/{basket_id}', [BasketController::class, 'destroy']);
-//Route::post('/baskets/user/{user_id}',[BasketController::class,'store']);
+    Route::post('/{basket_id}', [BasketController::class, 'addProduct']);
+    Route::patch('/{basket_id}/products/{product_id}', [BasketController::class, 'updateProduct']);
+    Route::delete('/{basket_id}/products/{product_id}', [BasketController::class, 'removeProduct']);
 
     Route::fallback(function() {
         abort(404, 'API resource not found');

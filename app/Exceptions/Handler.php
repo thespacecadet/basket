@@ -2,6 +2,8 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Throwable;
@@ -43,6 +45,15 @@ class Handler extends ExceptionHandler
         if ($e instanceof MethodNotAllowedHttpException) {
             return response()->json(['message' => $e->getMessage()])->setStatusCode(405);
         }
+
+        if ($e instanceof UniqueConstraintViolationException) {
+            return response()->json(['message' =>'Resource already Exists'])->setStatusCode(400);
+        }
+
+        if ($e instanceof ModelNotFoundException) {
+            return response()->json(['message' =>'Resource not found'])->setStatusCode(404);
+        }
+
 
         return parent::render($request, $e);
     }
