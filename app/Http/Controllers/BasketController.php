@@ -25,12 +25,12 @@ class BasketController extends Controller
     public function store(Request $request){
         $basket = new Basket();
         $basket->user_id = $request->user_id;
-        return $basket->save();
+        return 'worked '. $basket->save();
     }
 
     public function destroy(Request $request){
             $basket = Basket::findOrFail($request->basket_id);
 
-        return  $basket;
+        return  $basket->delete();
     }
 }
