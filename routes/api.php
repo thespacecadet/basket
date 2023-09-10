@@ -22,6 +22,7 @@ Route::group(['prefix' => '/baskets','middleware' => ['json.response']], functio
 
     Route::resource('/',BasketController::class, ['only' => ['index','store']]);
     Route::get('/{basket_id}', [BasketController::class, 'show']);
+    Route::get('/users/{user_id}', [BasketController::class, 'getBasketByUser']);
     Route::delete('/{basket_id}', [BasketController::class, 'destroy']);
     Route::post('/{basket_id}', [BasketController::class, 'addProduct']);
     Route::patch('/{basket_id}/products/{product_id}', [BasketController::class, 'updateProduct']);
