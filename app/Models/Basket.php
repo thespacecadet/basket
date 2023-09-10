@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
 
 class Basket extends Model
 {
@@ -31,10 +32,22 @@ class Basket extends Model
     }
 
     /**
-     * The All Baskets.
+     * Get Basket Sum
      */
-    public function baskets(): BelongsToMany
+    public function getBasketSum(): Int
     {
-        return $this->belongsToMany(Product::class);
+        return $this->products()->sum(DB::raw('price * quantity'));
     }
+
+    /**
+     * Check if basket has products
+     */
+    public function hasProducts(): bool
+    {
+
+        return (bool) $this->products()->first();
+    }
+
+
+
 }

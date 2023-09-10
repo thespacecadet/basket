@@ -52,7 +52,7 @@ class BasketController extends Controller
     {
         $basket = Basket::with(['products:id,price'])
             ->findOrFail($basket_id);
-        $basket->basketSum = $basket->products()->sum(DB::raw('price * quantity'));
+        $basket->basketSum = $basket->getBasketSum();
         return response()->json(['message' => 'OK', 'status' => 200, 'content' => $basket])->setStatusCode(200);
     }
 
@@ -127,7 +127,6 @@ class BasketController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'Basket not found', 'status' => 404])->setStatusCode(404);
         }
-
         $basket->delete();
         return response()->json(['message' => 'OK', 'status' => 200])->setStatusCode(200);
     }
@@ -190,7 +189,6 @@ class BasketController extends Controller
             return response()->json(['message' => 'OK', 'status' => 200])->setStatusCode(200);
         } else {
             return response()->json(['message' => 'Product not found in basket', 'status' => 404])->setStatusCode(404);
-
         }
     }
 
@@ -300,8 +298,9 @@ class BasketController extends Controller
     public function getBasketByUser(Request $request): JsonResponse
     {
         $userId = $request->user_id;
-        $basket = Basket::where('user_id', $userId)->get();
+        $user = User::findOrFail($userId);
+        $basket = $user->basket()->first();
         $basketData = new BasketResource($basket);
-        return response()->json(['message' => 'OK', 'status' => 200, 'content' => $basketData])->setStatusCode('200');
+        return response()->json(['message' => 'OK', 'status' => 200, 'content' => $basket])->setStatusCode('200');
     }
 }
